@@ -1,6 +1,6 @@
 # CrabScore - The Rust Efficiency Standard
 
-![CrabScore Logo](src/assets/crabcore-logo.png)
+<img src="src/assets/crabcore-logo.png" alt="CrabScore Logo" width="200" height="200">
 
 [![Crates.io](https://img.shields.io/crates/v/crabscore-cli?style=flat-square)](https://crates.io/crates/crabscore-cli)
 [![Downloads](https://img.shields.io/crates/d/crabscore-cli?style=flat-square)](https://crates.io/crates/crabscore-cli)
