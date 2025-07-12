@@ -1,0 +1,20 @@
+[package]
+name = "crabscore-cost"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+authors.workspace = true
+description = "Cost metrics collection for CrabScore - The Rust Efficiency Standard"
+
+[dependencies]
+crabscore-core = { version = "0.1.0", path = "../crabscore-core" }
+anyhow = "1.0"
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["fs", "macros", "rt-multi-thread"] }
+async-trait = "0.1"
+tracing = "0.1"

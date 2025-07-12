@@ -1,0 +1,25 @@
+[package]
+name = "crabscore-energy"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+authors.workspace = true
+description = "Energy monitoring for CrabScore - The Rust Efficiency Standard"
+
+[dependencies]
+crabscore-core = { version = "0.1.0", path = "../crabscore-core" }
+tokio = { version = "1.0", features = ["full"] }
+anyhow = "1.0"
+async-trait = "0.1"
+tracing = "0.1"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+scaphandre = "0.5"
+
+# TODO: Add Windows power monitoring support
+# [target.'cfg(windows)'.dependencies]

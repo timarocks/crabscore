@@ -1,0 +1,1 @@
+// Placeholder macOS energy module

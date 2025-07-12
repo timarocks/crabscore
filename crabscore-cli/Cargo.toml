@@ -1,0 +1,33 @@
+[package]
+name = "crabscore-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+authors.workspace = true
+description = "Command-line interface for CrabScore - The Rust Efficiency Standard"
+
+[[bin]]
+name = "crabscore"
+path = "src/main.rs"
+description = "Command-line interface for CrabScore - The Rust Efficiency Standard"
+
+[dependencies]
+crabscore-core = { version = "0.1.1", path = "../crabscore-core" }
+crabscore-energy = { version = "0.1.1", path = "../crabscore-energy" }
+crabscore-analysis = { version = "0.1.1", path = "../crabscore-analysis" }
+crabscore-cost = { version = "0.1.1", path = "../crabscore-cost" }
+crabscore-report = { version = "0.1.1", path = "../crabscore-report" }
+clap = { version = "4.0", features = ["derive"] }
+colored = "2.0"
+tokio = { version = "1.0", features = ["full"] }
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tempfile = "3"
+toml = "0.7"
+walkdir = "2.5"

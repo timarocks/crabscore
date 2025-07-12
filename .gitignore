@@ -1,0 +1,34 @@
+# Build artifacts
+/target/
+
+# IntelliJ / VS Code / Xcode
+.idea/
+.vscode/
+*.xcworkspace/
+*.xcuserstate
+
+# macOS cruft
+.DS_Store
+
+# Logs & dumps
+*.log
+*.rdb
+
+# Byproducts
+Cargo.lock
+
+# Editor swap files
+*~
+*.swp
+*.swo
+
+# Coverage
+/coverage/
+
+# Generated Reports
+crabscore_report.*
+report_csrd.json
+
+# Temporary files
+.temp
+.env

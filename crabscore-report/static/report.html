@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrabScore Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #18191c;
+      --card: #232428;
+      --accent: #ff5522;
+      --accent-energy: #00c8b0;
+      --accent-cost: #ffb300;
+      --accent-bonus: #b4ff00;
+      --text: #f7f7f7;
+      --text-sub: #bbb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "JetBrains Mono", monospace;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header, footer { text-align: center; padding: 1rem; }
+    main { flex: 1; width: 100%; max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+    h1 { margin: 0 0 1rem 0; font-size: 2rem; color: var(--text); text-align: center; }
+    .logo { max-width: 64px; height: auto; margin: 0 auto 1rem auto; display: block; }
+
+    .cards { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    .card {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px #0003;
+    }
+    .label { font-size: 0.95rem; color: var(--text-sub); margin-bottom: 0.4rem; }
+    .value { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .bar { width: 100%; height: 8px; background:#333; border-radius:4px; overflow:hidden; }
+    .bar-fill { height:100%; border-radius:4px; }
+
+    .meta { margin-top: 2rem; background: #202125; padding: 1rem 1.2rem; border-radius: 0.5rem; line-height: 1.6; color: var(--text-sub); }
+    .meta b { color: var(--text); }
+
+    pre {
+      background:#111; color:#aaa; padding:1rem; overflow-x:auto; border-radius:0.5rem; margin-top:1rem; display:none;
+    }
+    .toggle { margin-top:1rem; padding:0.4rem 1rem; background: var(--card); color: var(--accent-cost); border:none; border-radius:6px; cursor:pointer; }
+    .toggle:hover { background:#333; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="crabcore-logo.png" alt="CrabScore" class="logo" />
+    <span style="font-weight:700;letter-spacing:1px;">CRABSCORE</span>
+  </header>
+  <main>
+    <h1>CRABSCORE REPORT</h1>
+    <div class="cards" id="cards"></div>
+    <div class="meta" id="meta"></div>
+    <button class="toggle" id="toggle">Show Raw JSON</button>
+    <pre id="raw"></pre>
+  </main>
+  <footer>© 2025 Crabcore. All rights reserved.</footer>
+  <script>
+    async function load() {
+      let data;
+      try {
+        const res = await fetch('/data.json');
+        if (!res.ok) throw new Error(res.statusText);
+        data = await res.json();
+      } catch (e) {
+        console.error('Failed to fetch data.json:', e);
+        return;
+      }
+      const s = data.score;
+      const metrics = [
+        { key:'overall',  label:'Overall',      color:'var(--accent)' },
+        { key:'performance', label:'Performance', color:'var(--accent)' },
+        { key:'energy', label:'Energy',      color:'var(--accent-energy)' },
+        { key:'cost',  label:'Cost',        color:'var(--accent-cost)' },
+        { key:'bonuses', label:'Bonuses',     color:'var(--accent-bonus)' },
+      ];
+      const cards = metrics.map(m => {
+        const v = Number(s[m.key]).toFixed(2);
+        const pct = Math.min(Number(s[m.key]), 100);
+        return `<div class="card">
+          <div class="label">${m.label}</div>
+          <div class="value" style="color:${m.color}">${v}</div>
+          <div class="bar"><div class="bar-fill" style="background:${m.color};width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+      document.getElementById('cards').innerHTML = cards;
+
+      const md = s.metadata || {};
+      const cert = s.certification && s.certification !== 'None' ? `<b>Certification:</b> ${s.certification}<br>` : '';
+      document.getElementById('meta').innerHTML = `
+        <b>Profile:</b> ${md.profile || 'N/A'}<br>
+        <b>Project:</b> ${md.project_name || 'N/A'}<br>
+        <b>Version:</b> ${md.version || 'N/A'}<br>
+        ${cert}
+        <b>Timestamp:</b> ${s.timestamp}
+      `;
+
+      const raw = document.getElementById('raw');
+      raw.textContent = JSON.stringify(data, null, 2);
+      document.getElementById('toggle').addEventListener('click', () => {
+        raw.style.display = raw.style.display === 'block' ? 'none' : 'block';
+      });
+    }
+    load();
+  </script>
+</body>
+</html>

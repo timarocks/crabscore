@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrabScore Report</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap">
+  <style>
+    body {
+      background: #18191c;
+      color: #f7f7f7;
+      font-family: 'Roboto Mono', monospace;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 2rem 3rem 0 3rem;
+      justify-content: center;
+    }
+    .logo {
+      height: 40px;
+      margin-right: 1.5rem;
+    }
+    .title {
+      font-size: 2.2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+    .headline {
+      font-size: 2.1rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #ff5522;
+      margin: 2rem 0 1rem 0;
+      text-align: center;
+    }
+    .score-cards {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0 1rem 0;
+    }
+    .score-card {
+      background: #232428;
+      border-radius: 1rem;
+      padding: 2rem 2.5rem;
+      min-width: 220px;
+      box-shadow: 0 2px 12px #0002;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .score-label {
+      font-size: 1.1rem;
+      color: #bbb;
+      margin-bottom: 0.4rem;
+    }
+    .score-value {
+      font-size: 2.3rem;
+      font-weight: bold;
+      color: #ff5522;
+      margin-bottom: 0.2rem;
+    }
+    .score-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #333;
+      margin: 0.3rem 0 0.7rem 0;
+      overflow: hidden;
+    }
+    .score-bar-inner {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #ff5522 70%, #ffb300 100%);
+    }
+    .meta {
+      background: #202125;
+      border-radius: 0.7rem;
+      padding: 1.2rem 2rem;
+      margin: 2rem auto 1rem auto;
+      max-width: 640px;
+      color: #b7b7b7;
+      font-size: 1rem;
+      line-height: 1.7;
+      box-shadow: 0 1px 6px #0003;
+    }
+    .footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.95rem;
+      margin: 2.5rem 0 1rem 0;
+    }
+    .json-raw {
+      background: #18191c;
+      color: #aaa;
+      font-size: 0.97rem;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 2rem auto 0 auto;
+      max-width: 700px;
+      overflow-x: auto;
+      border: 1px solid #232428;
+      display: none;
+    }
+    .toggle-json {
+      display: block;
+      margin: 1.2rem auto 0 auto;
+      background: #232428;
+      color: #ffb300;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .toggle-json:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="crabcore-logo.png" class="logo" alt="CrabScore Logo" />
+    <span class="title">CRABCORE</span>
+  </div>
+  <div class="headline" id="headline">CRABSCORE REPORT</div>
+  <div class="score-cards" id="scoreCards"></div>
+  <div class="meta" id="metaInfo"></div>
+  <button class="toggle-json" onclick="toggleJson()">Show Raw JSON</button>
+  <pre class="json-raw" id="jsonRaw"></pre>
+  <div class="footer">© 2025 Crabcore. All rights reserved.</div>
+  <script>
+    // This would be replaced by server-injected or fetched JSON
+    const crabScore = window.__CRABSCORE__ || {
+      "score": {
+        "overall": 68.05,
+        "performance": 33.0,
+        "energy": 49.5,
+        "cost": 100.0,
+        "bonuses": 10.0,
+        "certification": "None",
+        "metadata": {
+          "profile": "WebServices",
+          "project_name": "",
+          "version": "",
+          "measurements": {
+            "duration": { "nanos": 0, "secs": 0 },
+            "environment": { "cpu": "", "memory_gb": 0.0, "os": "", "rust_version": "" },
+            "iterations": 0
+          }
+        },
+        "timestamp": "2025-07-12T10:23:43.297056Z"
+      }
+    };
+    // Score cards config
+    const metrics = [
+      { label: 'Overall', value: crabScore.score.overall, color: '#ff5522' },
+      { label: 'Performance', value: crabScore.score.performance, color: '#ff5522' },
+      { label: 'Energy', value: crabScore.score.energy, color: '#00c8b0' },
+      { label: 'Cost', value: crabScore.score.cost, color: '#ffb300' },
+      { label: 'Bonuses', value: crabScore.score.bonuses, color: '#b4ff00' }
+    ];
+    function renderScoreCards() {
+      const cards = metrics.map(m => `
+        <div class="score-card">
+          <div class="score-label">${m.label}</div>
+          <div class="score-value" style="color:${m.color}">${m.value.toFixed(2)}</div>
+          <div class="score-bar"><div class="score-bar-inner" style="width:${Math.min(m.value,100)}%;background:${m.color}"></div></div>
+        </div>
+      `).join('');
+      document.getElementById('scoreCards').innerHTML = cards;
+    }
+    function renderMeta() {
+      const meta = crabScore.score.metadata;
+      const cert = crabScore.score.certification && crabScore.score.certification !== 'None' ? `<b>Certification:</b> ${crabScore.score.certification}<br>` : '';
+      document.getElementById('metaInfo').innerHTML = `
+        <b>Profile:</b> ${meta.profile || 'N/A'}<br>
+        <b>Project Name:</b> ${meta.project_name || 'N/A'}<br>
+        <b>Version:</b> ${meta.version || 'N/A'}<br>
+        ${cert}
+        <b>Timestamp:</b> ${crabScore.score.timestamp}
+      `;
+    }
+    function toggleJson() {
+      const pre = document.getElementById('jsonRaw');
+      pre.style.display = pre.style.display === 'block' ? 'none' : 'block';
+      pre.textContent = JSON.stringify(crabScore, null, 2);
+    }
+    renderScoreCards();
+    renderMeta();
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+[workspace]
+members = [
+    "crabscore-core",
+    "crabscore-cli",
+    "crabscore-energy",
+    "crabscore-analysis",
+    "crabscore-cost",
+    "crabscore-report"
+]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.1.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/timarocks/crabscore"
+homepage = "https://github.com/timarocks/crabscore"
+documentation = "https://docs.rs/crabscore-cli"
+keywords = ["performance", "energy", "cost", "efficiency", "rust"]
+categories = ["development-tools", "command-line-utilities"]
+authors = ["CrabCore Team"]
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1.0"
+anyhow = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+rayon = "1.7"
+clap = { version = "4.0", features = ["derive"] }
+colored = "2.0"
+axum = "0.6"
+tower-http = { version = "0.4", features = ["fs"] }
+
+

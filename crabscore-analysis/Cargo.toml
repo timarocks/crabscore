@@ -1,0 +1,26 @@
+[package]
+name = "crabscore-analysis"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+categories.workspace = true
+authors.workspace = true
+description = "Static code analysis for CrabScore - The Rust Efficiency Standard"
+
+[dependencies]
+crabscore-core = { version = "0.1.0", path = "../crabscore-core" }
+
+syn = { version = "2.0", features = ["full", "extra-traits", "visit"] }
+walkdir = "2.5"
+
+
+quote = "1.0"
+anyhow = "1.0"
+tokio = { version = "1.0", features = ["process", "macros", "rt-multi-thread"] }
+tracing = "0.1"
+rayon = "1.7"
+ignore = "0.4"
